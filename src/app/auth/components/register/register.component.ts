@@ -6,8 +6,8 @@ import {Observable} from 'rxjs'
 import {registerAction} from 'src/app/auth/store/actions/register.action'
 import {AppStateInterface} from 'src/app/shared/types/appState.interface'
 import {isSubmittingSelector} from '../../store/selectors'
-import {AuthService} from '../../services/auth.service'
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface'
+import {RegisterRequestInterface} from '../../types/registerRequest.interface'
 
 @Component({
   selector: 'mc-register',
@@ -20,8 +20,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<AppStateInterface>,
-    private authService: AuthService
+    private store: Store<AppStateInterface>
   ) {}
 
   ngOnInit(): void {
@@ -43,11 +42,9 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     console.log(this.form.valid)
-    this.store.dispatch(registerAction(this.form.value))
-    this.authService
-      .register({user: this.form.value})
-      .subscribe((currentUser: CurrentUserInterface) => {
-        console.log(currentUser)
-      })
+    const request: RegisterRequestInterface = {
+      user: this.form.value,
+    }
+    this.store.dispatch(registerAction({request}))
   }
 }
